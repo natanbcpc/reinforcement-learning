@@ -60,7 +60,7 @@ class Utils:
 
     for x, y in objects:
       if abs(px - x) + abs(py - y) <= currentMin:
-        distance = self.findDijkstraDistanceIfLessThan(state, px, py, x, y, currentMin)
+        distance = self.findDijkstraDistanceIfLessThan(state, px, py, round(x), round(y), currentMin)
         if distance < currentMin:
           currentMin = distance
           currentMinX = x
@@ -118,7 +118,7 @@ class Utils:
 
     return self.findBestDistanceAndPos(state, foodPositions)
 
-  def getClosestCapsulesData(self, state):
+  def getClosestCapsuleData(self, state):
     capsules = state.getCapsules()
 
     if not capsules:

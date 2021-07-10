@@ -1,3 +1,4 @@
+import random
 from values import Value
 
 class Operator(Value):
@@ -6,29 +7,34 @@ class Operator(Value):
       self.secondValue = secondValue
 
 class Subtraction(Operator):
-  def getValue(self, state):
-    return self.firstValue.getValue(state) - self.secondValue.getValue(state)
+  def getValue(self, state, cache):
+    return self.firstValue.getValue(state, cache) - self.secondValue.getValue(state, cache)
 
 class Addition(Operator):
-  def getValue(self, state):
-    return self.firstValue.getValue(state) + self.secondValue.getValue(state)
+  def getValue(self, state, cache):
+    return self.firstValue.getValue(state, cache) + self.secondValue.getValue(state, cache)
 
 class Multiplication(Operator):
-  def getValue(self, state):
-    return self.firstValue.getValue(state) * self.secondValue.getValue(state)
+  def getValue(self, state, cache):
+    return self.firstValue.getValue(state, cache) * self.secondValue.getValue(state, cache)
 
 class Division(Operator):
-  def getValue(self, state):
-    sv = self.secondValue.getValue(state)
+  def getValue(self, state, cache):
+    sv = self.secondValue.getValue(state, cache)
     if sv == 0.0:
       return 0.0
 
-    return self.firstValue.getValue(state) / sv
+    return self.firstValue.getValue(state, cache) / sv
 
 class Minimum(Operator):
-  def getValue(self, state):
-    return min(self.firstValue.getValue(state), self.secondValue.getValue(state))
+  def getValue(self, state, cache):
+    return min(self.firstValue.getValue(state, cache), self.secondValue.getValue(state, cache))
 
 class Maximum(Operator):
-  def getValue(self, state):
-    return max(self.firstValue.getValue(state), self.secondValue.getValue(state))
+  def getValue(self, state, cache):
+    return max(self.firstValue.getValue(state, cache), self.secondValue.getValue(state, cache))
+
+operators = (Subtraction, Addition, Multiplication, Division, Minimum, Maximum)
+
+def getRandomOperator(firstValue, secondValue) -> Operator:
+  return random.choice(operators)(firstValue, secondValue)
