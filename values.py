@@ -2,15 +2,18 @@ import random
 from utils import Utils
 
 class Value:
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     "Should return a value to be used for a strategy"
     pass
 
   def __init__(self):
     self.utils = Utils()
 
+  def __repr__(self):
+    return self.__class__.__name__ + "()"
+
 class UnedibleGhostsQuantity(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getUnedibleGhostsQuantity(state)
@@ -18,7 +21,7 @@ class UnedibleGhostsQuantity(Value):
     return cache[name]
 
 class ClosestUnedibleGhostDistance(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestUnedibleGhostData(state)
@@ -30,7 +33,7 @@ class ClosestUnedibleGhostDistance(Value):
     return cache[name]
 
 class ClosestUnedibleGhostX(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestUnedibleGhostData(state)
@@ -42,7 +45,7 @@ class ClosestUnedibleGhostX(Value):
     return cache[name]
 
 class ClosestUnedibleGhostY(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestUnedibleGhostData(state)
@@ -54,7 +57,7 @@ class ClosestUnedibleGhostY(Value):
     return cache[name]
 
 class EdibleGhostsQuantity(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getEdibleGhostsQuantity(state)
@@ -62,7 +65,7 @@ class EdibleGhostsQuantity(Value):
     return cache[name]
 
 class ClosestEdibleGhostDistance(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestEdibleGhostData(state)
@@ -74,7 +77,7 @@ class ClosestEdibleGhostDistance(Value):
     return cache[name]
 
 class ClosestEdibleGhostX(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestEdibleGhostData(state)
@@ -86,7 +89,7 @@ class ClosestEdibleGhostX(Value):
     return cache[name]
 
 class ClosestEdibleGhostY(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestEdibleGhostData(state)
@@ -98,7 +101,7 @@ class ClosestEdibleGhostY(Value):
     return cache[name]
 
 class FoodQuantity(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getFoodQuantity(state)
@@ -106,7 +109,7 @@ class FoodQuantity(Value):
     return cache[name]
 
 class ClosestFoodDistance(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestFoodData(state)
@@ -118,7 +121,7 @@ class ClosestFoodDistance(Value):
     return cache[name]
 
 class ClosestFoodX(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestFoodData(state)
@@ -130,7 +133,7 @@ class ClosestFoodX(Value):
     return cache[name]
 
 class ClosestFoodY(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestFoodData(state)
@@ -142,7 +145,7 @@ class ClosestFoodY(Value):
     return cache[name]
 
 class CapsulesQuantity(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getCapsulesQuantity(state)
@@ -150,7 +153,7 @@ class CapsulesQuantity(Value):
     return cache[name]
 
 class ClosestCapsuleDistance(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestCapsuleData(state)
@@ -162,7 +165,7 @@ class ClosestCapsuleDistance(Value):
     return cache[name]
 
 class ClosestCapsuleX(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestCapsuleData(state)
@@ -174,7 +177,7 @@ class ClosestCapsuleX(Value):
     return cache[name]
 
 class ClosestCapsuleY(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       data = self.utils.getClosestCapsuleData(state)
@@ -186,7 +189,7 @@ class ClosestCapsuleY(Value):
     return cache[name]
 
 class PacmanX(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getPacmanPosition(state)[0]
@@ -194,7 +197,7 @@ class PacmanX(Value):
     return cache[name]
 
 class PacmanY(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
     name = type(self).__name__
     if name not in cache:
       cache[name] = self.utils.getPacmanPosition(state)[1]
@@ -202,23 +205,23 @@ class PacmanY(Value):
     return cache[name]
 
 class Constant0(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
       return 0.0
 
 class Constant0_1(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
       return 0.1
 
 class Constant1(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
       return 1.0
 
 class Constant10(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
       return 10.0
 
 class Constant_1(Value):
-  def getValue(self, state, cache):
+  def getValue(self, state, cache={}):
       return -1.0
 
 values = (UnedibleGhostsQuantity, ClosestUnedibleGhostDistance, ClosestUnedibleGhostX, ClosestUnedibleGhostY, EdibleGhostsQuantity, ClosestEdibleGhostDistance, ClosestEdibleGhostX, ClosestEdibleGhostY, FoodQuantity, ClosestFoodDistance, ClosestFoodX, ClosestFoodY, CapsulesQuantity, ClosestCapsuleDistance, ClosestCapsuleX, ClosestCapsuleY, PacmanX, PacmanY, Constant0, Constant0_1, Constant1, Constant10, Constant_1)

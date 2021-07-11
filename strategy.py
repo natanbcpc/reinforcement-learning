@@ -8,4 +8,7 @@ class Strategy:
 
   def __init__(self, values):
     self.values = values
-    self.directions = [Directions.EAST, Directions.SOUTH, Directions.WEST, Directions.NORTH, Directions.STOP]
+    self.directions = [Directions.EAST, Directions.SOUTH, Directions.WEST, Directions.NORTH] #, Directions.STOP]
+
+  def __repr__(self):
+    return self.__class__.__name__ + "(%s)" % (self.values.__repr__())

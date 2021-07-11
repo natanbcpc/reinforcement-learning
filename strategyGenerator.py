@@ -6,13 +6,13 @@ from strategy import Strategy
 
 def generateStrategy():
   values = []
-  for _ in range(5):
+  for _ in range(4):
     values.append(generateValueTree())
 
   return Strategy(values)
 
 def generateValueTree(level=1):
-  operator = random.random() < (0.95 ** (level - 1))
+  operator = random.random() < (0.9 ** (level - 1))
 
   if operator:
     firstValue = generateValueTree(level + 1)
