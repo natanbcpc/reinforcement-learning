@@ -1,130 +1,137 @@
 import numpy as np
 
-class Utils:
-  def isFree(self, state, x, y, considerGhosts):
-    hasWall = state.hasWall(x, y)
-    hasGhost = False
+def isFree(state, x, y, considerGhosts):
+  hasWall = state.hasWall(x, y)
+  hasGhost = False
 
-    if considerGhosts:
-        hasGhost = (x, y) in state.getGhostPositions()
+  if considerGhosts:
+      hasGhost = (x, y) in state.getGhostPositions()
 
-    return not (hasWall or hasGhost)
+  return not (hasWall or hasGhost)
 
-  def getNeighbors(self, state, x, y, considerGhosts):
-    neighbors = []
-    if self.isFree(state, x+1, y, considerGhosts):
-      neighbors.append((x+1, y))
-    if self.isFree(state, x-1, y, considerGhosts):
-      neighbors.append((x-1, y))
-    if self.isFree(state, x, y+1, considerGhosts):
-      neighbors.append((x, y+1))
-    if self.isFree(state, x, y-1, considerGhosts):
-      neighbors.append((x, y-1))
-    return neighbors
+def getNeighbors(state, x, y, considerGhosts):
+  neighbors = []
+  if isFree(state, x+1, y, considerGhosts):
+    neighbors.append((x+1, y))
+  if isFree(state, x-1, y, considerGhosts):
+    neighbors.append((x-1, y))
+  if isFree(state, x, y+1, considerGhosts):
+    neighbors.append((x, y+1))
+  if isFree(state, x, y-1, considerGhosts):
+    neighbors.append((x, y-1))
+  return neighbors
 
-  def findDijkstraDistanceIfLessThan(self, state, x1, y1, x2, y2, maxDistance, considerGhosts=False):
-    distance = {}
-    queue = {}
+def findDijkstraDistanceIfLessThan(state, x1, y1, x2, y2, maxDistance, considerGhosts=False):
+  distance = {}
+  queue = {}
 
-    for i in range(state.getWalls().width):
-      for j in range(state.getWalls().height):
-        if self.isFree(state, i, j, considerGhosts):
-          distance[(i, j)] = np.inf
-          queue[(i, j)] = np.inf
+  for i in range(state.getWalls().width):
+    for j in range(state.getWalls().height):
+      if isFree(state, i, j, considerGhosts):
+        distance[(i, j)] = np.inf
+        queue[(i, j)] = np.inf
 
-    distance[(x1, y1)] = 0
-    queue[(x1, y1)] = 0
+  distance[(x1, y1)] = 0
+  queue[(x1, y1)] = 0
 
-    while queue:
-      x, y = min(queue, key=queue.get)
-      d = queue.pop((x, y))
-      if x == x2 and y == y2:
-        return d
-      if d >= maxDistance:
-        return np.inf
+  while queue:
+    x, y = min(queue, key=queue.get)
+    d = queue.pop((x, y))
+    if x == x2 and y == y2:
+      return d
+    if d >= maxDistance:
+      return np.inf
 
-      for nx, ny in self.getNeighbors(state, x, y, considerGhosts):
-        if (nx, ny) in queue:
-          newDistance = distance[(x, y)] + 1
-          if newDistance < distance[(nx, ny)]:
-            queue[(nx, ny)] = newDistance
-            distance[(nx, ny)] = newDistance
+    for nx, ny in getNeighbors(state, x, y, considerGhosts):
+      if (nx, ny) in queue:
+        newDistance = distance[(x, y)] + 1
+        if newDistance < distance[(nx, ny)]:
+          queue[(nx, ny)] = newDistance
+          distance[(nx, ny)] = newDistance
 
-    return distance[(x2, y2)]
+  return distance[(x2, y2)]
 
-  def findBestDistanceAndPos(self, state, objects):
-    px, py = state.getPacmanPosition()
-    currentMin = np.inf
-    currentMinX = -1
-    currentMinY = -1
+def findBestDistanceAndPos(state, objects):
+  px, py = state.getPacmanPosition()
+  currentMin = np.inf
+  currentMinX = -1
+  currentMinY = -1
 
-    for x, y in objects:
-      if abs(px - x) + abs(py - y) <= currentMin:
-        distance = self.findDijkstraDistanceIfLessThan(state, px, py, round(x), round(y), currentMin)
-        if distance < currentMin:
-          currentMin = distance
-          currentMinX = x
-          currentMinY = y
+  estimation = [abs(px - x) + abs(py - y) for x, y in objects]
+  estimationOrderedObjects = [o for _,o in sorted(zip(estimation, objects))]
 
-    return (currentMin, currentMinX, currentMinY)
+  for x, y in estimationOrderedObjects:
+    if abs(px - x) + abs(py - y) > currentMin:
+      return (currentMin, currentMinX, currentMinY)
 
-  def getUnedibleGhostPositions(self, state):
-    return [g.getPosition() for g in state.getGhostStates() if g.scaredTimer <= 0]
+    distance = findDijkstraDistanceIfLessThan(state, px, py, round(x), round(y), currentMin)
+    if distance < currentMin:
+      currentMin = distance
+      currentMinX = x
+      currentMinY = y
 
-  def getEdibleGhostPositions(self, state):
-    return [g.getPosition() for g in state.getGhostStates() if g.scaredTimer > 0]
+  return (currentMin, currentMinX, currentMinY)
 
-  def getFoodPositions(self, state):
-    foodPositions = []
-    for i in range(state.getFood().width):
-      for j in range(state.getFood().height):
-        if state.getFood()[i][j]:
-          foodPositions.append((i, j))
-    return foodPositions
+def getUnedibleGhostPositions(state):
+  return [g.getPosition() for g in state.getGhostStates() if g.scaredTimer <= 0]
 
-  def getUnedibleGhostsQuantity(self, state):
-    return len(self.getUnedibleGhostPositions(state))
+def getEdibleGhostPositions(state):
+  return [g.getPosition() for g in state.getGhostStates() if g.scaredTimer > 0]
 
-  def getEdibleGhostsQuantity(self, state):
-    return len(self.getEdibleGhostPositions(state))
+def getFoodPositions(state):
+  foodPositions = []
+  for i in range(state.getFood().width):
+    for j in range(state.getFood().height):
+      if state.getFood()[i][j]:
+        foodPositions.append((i, j))
+  return foodPositions
 
-  def getFoodQuantity(self, state):
-    return state.getNumFood()
+def getUnedibleGhostsQuantity(state):
+  return len(getUnedibleGhostPositions(state))
 
-  def getCapsulesQuantity(self, state):
-    return len(state.getCapsules())
+def getEdibleGhostsQuantity(state):
+  return len(getEdibleGhostPositions(state))
 
-  def getClosestUnedibleGhostData(self, state):
-    unedibleGhostPositions = self.getUnedibleGhostPositions(state)
+def getFoodQuantity(state):
+  return state.getNumFood()
 
-    if not unedibleGhostPositions:
-      return None
+def getCapsulesQuantity(state):
+  return len(state.getCapsules())
 
-    return self.findBestDistanceAndPos(state, unedibleGhostPositions)
+def getClosestUnedibleGhostData(state):
+  unedibleGhostPositions = getUnedibleGhostPositions(state)
 
-  def getClosestEdibleGhostData(self, state):
-    edibleGhostPositions = self.getEdibleGhostPositions(state)
+  if not unedibleGhostPositions:
+    return None
 
-    if not edibleGhostPositions:
-      return None
+  return findBestDistanceAndPos(state, unedibleGhostPositions)
 
-    return self.findBestDistanceAndPos(state, edibleGhostPositions)
+def getClosestEdibleGhostData(state):
+  edibleGhostPositions = getEdibleGhostPositions(state)
 
-  def getClosestFoodData(self, state):
-    foodPositions = self.getFoodPositions(state)
+  if not edibleGhostPositions:
+    return None
 
-    if not foodPositions:
-      return None
+  return findBestDistanceAndPos(state, edibleGhostPositions)
 
-    return self.findBestDistanceAndPos(state, foodPositions)
+def getClosestFoodData(state):
+  foodPositions = getFoodPositions(state)
 
-  def getClosestCapsuleData(self, state):
-    capsules = state.getCapsules()
+  if not foodPositions:
+    return None
 
-    if not capsules:
-      return None
+  return findBestDistanceAndPos(state, foodPositions)
 
-    return self.findBestDistanceAndPos(state, capsules)
+def getClosestCapsuleData(state):
+  capsules = state.getCapsules()
 
-  def getPacmanPosition(self, state):
-    return state.getPacmanPosition()
+  if not capsules:
+    return None
+
+  return findBestDistanceAndPos(state, capsules)
+
+def getPacmanPosition(state):
+  return state.getPacmanPosition()
+
+def getScore(state):
+  return state.getScore()

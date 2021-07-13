@@ -10,4 +10,5 @@ class GeneticAgent(Agent):
 
         for d in directionOrder:
           if d in state.getLegalPacmanActions():
+            globalValues.strategy.setLastTakenDirection(d)
             return d

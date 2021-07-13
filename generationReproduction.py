@@ -1,43 +1,37 @@
-import copy
-import operators
 import random
 import strategyGenerator
 from strategy import Strategy
 
-def regenerate(strategy):
-  newStrategy = copy.deepcopy(strategy)
-  a = random.randint(0, len(newStrategy.values) - 1)
-  newStrategy.values[a] = strategyGenerator.generateValueTree()
-  return newStrategy
+def addLine(strategy):
+  valuesTrees = list(strategy.valuesTrees)
+  for _ in range(50):
+    line = []
+    for _ in range(4):
+      line.append(strategyGenerator.generateValueTree())
+    valuesTrees.append(line)
+  return Strategy(valuesTrees)
 
-def swap(strategy):
-  newStrategy = copy.deepcopy(strategy)
-  a = random.randint(0, len(newStrategy.values) - 1)
-  b = random.randint(0, len(newStrategy.values) - 1)
-  aux = newStrategy.values[a]
-  newStrategy.values[a] = newStrategy.values[b]
-  newStrategy.values[b] = aux
-  return newStrategy
-
-def branchSwap(strategy):
-  newStrategy = copy.deepcopy(strategy)
-  a = random.randint(0, len(newStrategy.values) - 1)
-  b = random.randint(0, len(newStrategy.values) - 1)
-  aux = newStrategy.values[a].firstValue
-  newStrategy.values[a].firstValue = newStrategy.values[b].secondValue
-  newStrategy.values[b].secondValue = aux
-  return newStrategy
+def removeLine(strategy):
+  valuesTrees = list(strategy.valuesTrees)
+  if len(valuesTrees) > 50:
+    for _ in range(50):
+      i = random.randint(0, len(valuesTrees) - 1)
+      valuesTrees.pop(i)
+  return Strategy(valuesTrees)
 
 def mutate(strategy):
-  return random.choice((regenerate, swap, branchSwap))(strategy)
+  return random.choice((addLine, removeLine))(strategy)
 
 def crossover(firstStrategy, secondStrategy):
-  firstStrategyCopy = copy.deepcopy(firstStrategy)
-  secondStrategyCopy = copy.deepcopy(secondStrategy)
-  values = []
-  for i in range(len(firstStrategyCopy.values)):
-    firstStrategyRoot = firstStrategyCopy.values[i].__class__
-    secondStrategyRoot = secondStrategyCopy.values[i].__class__
-
-    values.append(random.choice((firstStrategyCopy.values[i], secondStrategyCopy.values[i], firstStrategyRoot(firstStrategyCopy.values[i].firstValue, secondStrategyCopy.values[i].secondValue), secondStrategyRoot(secondStrategyCopy.values[i].firstValue, firstStrategyCopy.values[i].secondValue), operators.getRandomOperator(firstStrategyCopy.values[i], secondStrategyCopy.values[i]))))
-  return Strategy(values)
+  valuesTrees = []
+  shouldMantainLargerSize = bool(random.getrandbits(1))
+  for i in range(max(len(firstStrategy.valuesTrees), len(secondStrategy.valuesTrees))):
+    if i < len(firstStrategy.valuesTrees) and i < len(secondStrategy.valuesTrees):
+      valuesTrees.append(random.choice((firstStrategy.valuesTrees[i], secondStrategy.valuesTrees[i])))
+    elif not shouldMantainLargerSize:
+      return Strategy(valuesTrees)
+    elif i > len(firstStrategy.valuesTrees) - 1:
+      valuesTrees.append(secondStrategy.valuesTrees[i])
+    else:
+      valuesTrees.append(firstStrategy.valuesTrees[i])
+  return Strategy(valuesTrees)
