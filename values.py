@@ -202,14 +202,6 @@ class PacmanY(Value):
 
     return cache[name]
 
-class Score(Value):
-  def getValue(self, state, cache={}, lastTakenDirection=None):
-    name = type(self).__name__
-    if name not in cache:
-      cache[name] = utils.getScore(state)
-
-    return cache[name]
-
 class LastGoneEast(Value):
   def getValue(self, state, cache={}, lastTakenDirection=None):
     return 1.0 if lastTakenDirection == Directions.EAST else 0.0

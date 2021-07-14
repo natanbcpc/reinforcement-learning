@@ -1,4 +1,5 @@
 import numpy as np
+from game import Directions
 
 def isFree(state, x, y, considerGhosts):
   hasWall = state.hasWall(x, y)
@@ -135,3 +136,13 @@ def getPacmanPosition(state):
 
 def getScore(state):
   return state.getScore()
+
+def getOppositeDirection(direction):
+  if direction == Directions.EAST:
+    return Directions.WEST
+  elif direction == Directions.WEST:
+    return Directions.EAST
+  elif direction == Directions.NORTH:
+    return Directions.SOUTH
+  elif direction == Directions.SOUTH:
+    return Directions.NORTH

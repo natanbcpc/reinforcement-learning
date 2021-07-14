@@ -1,5 +1,5 @@
-from game import Agent
 import globalValues
+from game import Agent
 
 class GeneticAgent(Agent):
     "An agent that is guided by the globalValues.strategy tree."

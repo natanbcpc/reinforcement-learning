@@ -1,3 +1,4 @@
+import utils
 from game import Directions
 
 class Strategy:
@@ -7,7 +8,13 @@ class Strategy:
     for valuesTreesLine in self.valuesTrees:
       values = [v.getValue(state, cache, self.lastTakenDirection) for v in valuesTreesLine]
       votes[values.index(max(values))] += 1
-    return [x for _,x in sorted(zip(votes, self.directions), reverse=True)]
+
+    directionOrder = [x for _,x in sorted(zip(votes, self.directions), reverse=True)]
+    oppositeDirection = utils.getOppositeDirection(self.lastTakenDirection)
+    if oppositeDirection:
+      directionOrder.remove(oppositeDirection)
+      directionOrder.append(oppositeDirection)
+    return directionOrder
 
   def setLastTakenDirection(self, direction):
     self.lastTakenDirection = direction

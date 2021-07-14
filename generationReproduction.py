@@ -23,15 +23,6 @@ def mutate(strategy):
   return random.choice((addLine, removeLine))(strategy)
 
 def crossover(firstStrategy, secondStrategy):
-  valuesTrees = []
-  shouldMantainLargerSize = bool(random.getrandbits(1))
-  for i in range(max(len(firstStrategy.valuesTrees), len(secondStrategy.valuesTrees))):
-    if i < len(firstStrategy.valuesTrees) and i < len(secondStrategy.valuesTrees):
-      valuesTrees.append(random.choice((firstStrategy.valuesTrees[i], secondStrategy.valuesTrees[i])))
-    elif not shouldMantainLargerSize:
-      return Strategy(valuesTrees)
-    elif i > len(firstStrategy.valuesTrees) - 1:
-      valuesTrees.append(secondStrategy.valuesTrees[i])
-    else:
-      valuesTrees.append(firstStrategy.valuesTrees[i])
+  valuesTrees = random.sample(firstStrategy.valuesTrees, round(len(firstStrategy.valuesTrees) / 2))
+  valuesTrees += random.sample(secondStrategy.valuesTrees, round(len(secondStrategy.valuesTrees) / 2))
   return Strategy(valuesTrees)
